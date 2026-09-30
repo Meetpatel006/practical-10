@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Array Sort Visualizer | 12302080501034</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; }
+  .bars { display: flex; align-items: flex-end; gap: 6px; height: 180px; margin-top: 16px; }
+  .bar { flex: 1; background: #4B5563; color: #fff; text-align: center; font-size: 12px; }
+  button { padding: 8px 14px; margin-right: 8px; cursor: pointer; }
+  input, select { padding: 8px; margin-right: 8px; }
+</style>
+</head>
+<body>
+<h1>Array Sort Visualizer</h1>
+<p>Student: PATEL MEETKUMAR NARENDRABHAI (12302080501034). Static UI deployed by GitHub Actions to Pages. API runs in Docker.</p>
+<input id="arr" value="5,3,8,1,9,2" size="30" />
+<select id="algo"><option value="bubble">bubble</option><option value="quick">quick</option></select>
+<button onclick="runSort()">Sort</button>
+<div class="bars" id="bars"></div>
+<p id="out"></p>
+<script>
+function bubble(a){a=[...a];for(let i=0;i<a.length;i++)for(let j=0;j<a.length-i-1;j++)if(a[j]>a[j+1])[a[j],a[j+1]]=[a[j+1],a[j]];return a;}
+function quick(a){if(a.length<=1)return a;const p=a[a.length-1],l=[],r=[];for(let i=0;i<a.length-1;i++)(a[i]<p?l:r).push(a[i]);return [...quick(l),p,...quick(r)];}
+function runSort(){
+  const arr=document.getElementById('arr').value.split(',').map(Number);
+  const algo=document.getElementById('algo').value;
+  const sorted=(algo==='quick'?quick: bubble)(arr);
+  document.getElementById('out').textContent='Sorted: '+sorted.join(', ');
+  document.getElementById('bars').innerHTML=sorted.map(v=>`<div class="bar" style="height:${v*18}px">${v}</div>`).join('');
+}
+runSort();
+</script>
+</body>
+</html>

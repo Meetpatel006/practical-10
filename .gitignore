@@ -1,0 +1,12 @@
+# Dependencies (never push these to GitHub)
+node_modules/
+
+# Logs and test output
+npm-debug.log*
+coverage/
+results/
+
+# Local env and OS files
+.env
+.DS_Store
+Thumbs.db
