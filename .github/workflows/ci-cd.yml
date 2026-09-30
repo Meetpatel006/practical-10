@@ -21,13 +21,34 @@ jobs:
           node-version: 20
       - run: npm ci || npm install
       - run: npm test
-      - run: docker build -t ghcr.io/${{ github.repository_owner }}/array-sort-app:${{ github.sha }} .
-      - run: docker run -d -p 8888:8888 --name sort-api ghcr.io/${{ github.repository_owner }}/array-sort-app:${{ github.sha }}
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/array-sort-app
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: array-sort-app:ci
+
+      - run: docker run -d -p 8888:8888 --name sort-api array-sort-app:ci
       - run: sleep 5 && curl -s "http://localhost:8888/api/sort?algo=quick&arr=5,3,8,1" | grep "1,3,5,8"
+
       - if: github.ref == 'refs/heads/main'
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker push ghcr.io/${{ github.repository_owner }}/array-sort-app:${{ github.sha }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   cd-pages:
     needs: ci
