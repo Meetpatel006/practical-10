@@ -14,9 +14,6 @@ permissions:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: practical_10/array-sort-app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,6 +41,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: practical_10/array-sort-app/public
+          path: public
       - id: deploy
         uses: actions/deploy-pages@v4
